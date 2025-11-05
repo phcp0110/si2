@@ -198,7 +198,6 @@ class Dataset:
         y = np.random.randint(0, n_classes, n_samples)
         return cls(X, y, features=features, label=label)
 
-
 if __name__ == '__main__':
     X = np.array([[1, 2, 3], [4, 5, 6]])
     y = np.array([1, 2])
