@@ -1,4 +1,5 @@
 import numpy as np
+import sklearn
 
 
 def euclidean_distance(x: np.ndarray, y: np.ndarray) -> np.ndarray:
