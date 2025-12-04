@@ -200,6 +200,9 @@ class Dataset:
                 self.X[nan_mask] = value
             return self
 
+
+
+
         if isinstance(value, str):
             if value == "mean":
                 stats = np.nanmean(self.X, axis=0)
