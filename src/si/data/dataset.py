@@ -166,6 +166,72 @@ class Dataset:
             df = pd.DataFrame(self.X, columns=self.features)
             df[self.label] = self.y
             return df
+        
+    def dropna(self): #ex 2.1
+        """
+        Remove all samples that contain at least one NaN in X or y.
+        Modifies the dataset in-place and returns self.
+        """
+        # rows in X without NaNs
+        mask = ~np.isnan(self.X).any(axis=1)
+
+        # if y exists and is numeric, also ensure no NaNs in y
+        if self.has_label() and np.issubdtype(self.y.dtype, np.floating):
+            mask = mask & ~np.isnan(self.y)
+
+        self.X = self.X[mask]
+        if self.has_label():
+            self.y = self.y[mask]
+
+        return self
+
+    def fillna(self, value): #ex 2.2
+        """
+        Replace NaN values in X with a constant, or with the mean/median
+        of each feature. Modifies the dataset in-place and returns self.
+
+        Parameters
+        ----------
+        value : float or "mean" or "median"
+        """
+        if isinstance(value, (int, float)):
+            nan_mask = np.isnan(self.X)
+            if nan_mask.any():
+                self.X[nan_mask] = value
+            return self
+
+        if isinstance(value, str):
+            if value == "mean":
+                stats = np.nanmean(self.X, axis=0)
+            elif value == "median":
+                stats = np.nanmedian(self.X, axis=0)
+            else:
+                raise ValueError('value must be a float, "mean", or "median"')
+
+            nan_mask = np.isnan(self.X)
+            for j in range(self.X.shape[1]):
+                col_mask = nan_mask[:, j]
+                if col_mask.any():
+                    self.X[col_mask, j] = stats[j]
+
+            return self
+
+        raise ValueError('value must be a float, "mean", or "median"')
+
+    def remove_by_index(self, index: int): #ex 2.3
+        """
+        Remove a single sample by its index from X and y.
+        Modifies the dataset in-place and returns self.
+        """
+        if index < 0 or index >= self.X.shape[0]:
+            raise IndexError("index out of range")
+
+        self.X = np.delete(self.X, index, axis=0)
+        if self.has_label():
+            self.y = np.delete(self.y, index, axis=0)
+
+        return self
+
 
     @classmethod
     def from_random(cls,

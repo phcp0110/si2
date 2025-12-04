@@ -63,7 +63,7 @@ class SelectPercentile(Transformer):
         Estimates F and p for each feature using `score_func`; returns self.
         """
         if dataset.X.ndim != 2:
-            raise ValueError("Dataset.X must be 2D (n_samples, n_features).")
+            raise ValueError("Dataset.X must be 2D.")
 
         F, p = self.score_func(dataset)
         F = np.asarray(F)
